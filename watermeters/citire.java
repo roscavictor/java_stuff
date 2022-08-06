@@ -1,14 +1,14 @@
 package com.company;
 
 public class citire {
-    int data=0; // o vom "parsa" la input si output: de ex pt ian 2018 va fi 0118
-    int rece=0;
-    int calda=0;
-    public citire(int datacitire, int aparece, int apacalda)
+    int date=0; //  parse this value as in for january 2018 we have valur of 0118
+    int cold=0;
+    int warm=0;
+    public citire(int readingdate, int coldwater, int warmwater)
     {
-        data=datacitire;
-        rece=aparece;
-        calda=apacalda;
+        data=readingdate;
+        rece=coldwater;
+        calda=warmwater;
 
     }
 }
