@@ -6,24 +6,24 @@ import java.lang.reflect.Array;
 
 
 public class Main {
-    public static citire getObject(ArrayList<citire> array,int attribute)
+    public static reading getObject(ArrayList<reading> array,int attribute)
     {
-        for (citire elem : array) {
-            if (attribute==elem.data) {
+        for (reading elem : array) {
+            if (attribute==elem.date) {
                 return elem;
             }
         }
         return null;
     }
-    public static boolean existsInList(ArrayList<citire> c, int datacitire) {
-        for(citire o : c) {
-            if(o != null && o.data==datacitire) {
+    public static boolean existsInList(ArrayList<reading> c, int datereading) {
+        for(reading o : c) {
+            if(o != null && o.date==datereading) {
                 return true;
             }
         }
         return false;
     }
-    public static String parseMonth(String luna)
+    public static String parseMonth(String month)
     {
         if(luna.equals("ian"))
             luna="01";
@@ -55,88 +55,87 @@ public class Main {
         }
         return luna;
     }
-   public static void input(ArrayList<citire> array)
+   public static void input(ArrayList<reading> array)
    {
        Scanner in = new Scanner(System.in);
-       System.out.print("Luna citirii:");
-       String luna = in.nextLine();
-       luna=luna.toLowerCase();
-       luna=parseMonth(luna);
-       if(luna.equals("invalid"))
+       System.out.print("Reading month:");
+       String month = in.nextLine();
+       month=month.toLowerCase();
+       month=parseMonth(month);
+       if(month.equals("invalid"))
        {
-           System.out.println("Luna invalida");
+           System.out.println("Invalid month");
            return;
        }
-       System.out.println("Anul:");
-       String an=in.nextLine();
-       if(an.length()<=3 || an.length()>=5)
+       System.out.println("Year:");
+       String year=in.nextLine();
+       if(year.length()<=3 || year.length()>=5) // if year is not 4 digit then its invalid 
        {
-           System.out.println("An invalid");
+           System.out.println("invalid year");
            return;
        }
-       System.out.println("Apa rece:");
-      int aparece=in.nextInt();
-       System.out.println("Apa calda:");
-       int apacalda=in.nextInt();
-     // int luna_int=0;
+       System.out.println("Cold water:");
+      int coldwater=in.nextInt();
+       System.out.println("Warm water:");
+       int warmwater=in.nextInt();
+ 
 
-
-       an=an.substring(2);
-       int data=Integer.parseInt(luna+an);
-      if(existsInList(array,data))
+       year=year.substring(2); // trimming year since we only need last 2 years 
+       int date=Integer.parseInt(luna+an);
+      if(existsInList(array,date))
       {
-          System.out.println("Aceasta luna deja are citire");
+          System.out.println("This month already has value read");
           return;
       }
 
-      citire luna_anterioara=getObject(array,data-100);
+      reading prevmonth=getObject(array,date-100);
       //since our dates are formatted like "318" for march 2018 or "1218" for dec 2018 as ints, a date-100 would give us
        //the previous month
-       if(luna_anterioara!=null&&array.size()>1)
+       if(prevmonth!=null&&array.size()>1)
        {
-           if(luna_anterioara.rece>aparece || luna_anterioara.calda>apacalda)
+           if(prevmonth.cold>coldwater || prevmonth.warm>warmwater)
            {
-               System.out.println("Citirea de luna anterioara este mai mare. Citire invalida.");
+               System.out.println("Previous water values are bigger than current month's. Invalid.");
                return;
            }
        }
 
-     array.add(new citire(data,aparece,apacalda));
+     array.add(new reading(date,coldwater,warmwater));
        compareObjects comp=new compareObjects();
        Collections.sort(array,comp);
    }
-   public static void delete(ArrayList<citire> array)
+   public static void delete(ArrayList<reading> array)
    {
        Scanner in = new Scanner(System.in);
-       System.out.print("Luna citirii:");
-       String luna = in.nextLine();
-       luna=luna.toLowerCase();
-       luna=parseMonth(luna);
-       if(luna.equals("invalid"))
+       System.out.print("Reading month:");
+       String month = in.nextLine();
+       month=month.toLowerCase();
+       month=parseMonth(luna);
+       if(month.equals("invalid"))
        {
-           System.out.println("Luna invalida");
+           System.out.println("month invalid");
            return;
        }
-       System.out.println("Anul:");
-       String an=in.nextLine();
-       if(an.length()<=3 || an.length()>=5)
+       System.out.println("Year:");
+       String year=in.nextLine();
+       if(year.length()<=3 || year.length()>=5)
        {
-           System.out.println("An invalid");
+           System.out.println("year invalid");
            return;
        }
-       an=an.substring(2);
+       year=year.substring(2);
        int id=Integer.parseInt(luna+an);
-       citire elem=getObject(array,id);
+       reading elem=getObject(array,id);
        if(elem==null)
        {
-           System.out.println("Aceasta citire nu exista");
+           System.out.println("THis reading value is not present .");
            return;
        }
        else {
            array.remove(elem);
-           System.out.println("Stergere efectuata");
+           System.out.println("Succesful deletion.");
        }
-       // array.removeIf(t-> t.data==id);
+       // array.removeIf(t-> t.date==id);
 
    }
    public static String getDate(int id)
@@ -171,14 +170,14 @@ public class Main {
        return month+year;
    }
 
-   public static void afisare(ArrayList<citire> array)
+   public static void afisare(ArrayList<reading> array)
    {
 
        String[] matrix=
                {
-   "         ",    getDate(array.get(array.size()-2).data)        ,getDate(array.get(array.size()-1).data),       "consum",
-   "apa calda",    String.valueOf(array.get(array.size()-2).calda),String.valueOf(array.get(array.size()-1).calda) ,String.valueOf(array.get(array.size()-1).calda-array.get(array.size()-2).calda),
-   "apa rece",    String.valueOf(array.get(array.size()-2).rece),    String.valueOf(array.get(array.size()-1).rece) ,    String.valueOf(array.get(array.size()-1).rece-array.get(array.size()-2).rece),
+   "         ",    getDate(array.get(array.size()-2).date)        ,getDate(array.get(array.size()-1).date),       "consumption",
+   "warm water",    String.valueOf(array.get(array.size()-2).calda),String.valueOf(array.get(array.size()-1).calda) ,String.valueOf(array.get(array.size()-1).calda-array.get(array.size()-2).calda),
+   "cold water",    String.valueOf(array.get(array.size()-2).rece),    String.valueOf(array.get(array.size()-1).rece) ,    String.valueOf(array.get(array.size()-1).rece-array.get(array.size()-2).rece),
 
                };
 
@@ -201,40 +200,40 @@ public class Main {
    }
 
     public static void main(String[] args) {
-	// write your code here
-        ArrayList<citire> array=new ArrayList<citire>();
 
-       System.out.println("Alegeti functionanlitatea:");
-        System.out.println("1. Adaugare citire");
-        System.out.println("2. Stergere citire");
-        System.out.println("3. Afisare.");
-        System.out.println("4.Iesire");
+        ArrayList<reading> array=new ArrayList<reading>();
+
+       System.out.println("Choose function:");
+        System.out.println("1. Addd reading");
+        System.out.println("2. Delete reading");
+        System.out.println("3. Display.");
+        System.out.println("4.Exit");
         Scanner scan = new Scanner(System.in);
         int num=scan.nextInt();
         while(num!=4)
         {
             if(num==1) {
                 input(array);
-                System.out.println("1. Adaugare citire");
-                System.out.println("2. Stergere citire");
-                System.out.println("3. Afisare.");
-                System.out.println("4.Iesire");
+                 System.out.println("1. Addd reading");
+        System.out.println("2. Delete reading");
+        System.out.println("3. Display.");
+        System.out.println("4.Exit");
                 num=scan.nextInt();
             }
             if(num==2) {
                 delete(array);
-                System.out.println("1. Adaugare citire");
-                System.out.println("2. Stergere citire");
-                System.out.println("3. Afisare.");
-                System.out.println("4.Iesire");
+                System.out.println("1. Addd reading");
+        System.out.println("2. Delete reading");
+        System.out.println("3. Display.");
+        System.out.println("4.Exit");
                 num=scan.nextInt();
             }
             if(num==3){
                 afisare(array);
-                System.out.println("1. Adaugare citire");
-                System.out.println("2. Stergere citire");
-                System.out.println("3. Afisare.");
-                System.out.println("4.Iesire");
+                 System.out.println("1. Addd reading");
+        System.out.println("2. Delete reading");
+        System.out.println("3. Display.");
+        System.out.println("4.Exit");
                 num=scan.nextInt();}
             if(num==4){
                 return;}
